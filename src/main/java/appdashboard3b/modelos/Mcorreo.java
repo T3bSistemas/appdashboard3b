@@ -1,8 +1,8 @@
 package appdashboard3b.modelos;
 
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,21 +25,25 @@ public class Mcorreo {
         mailSender.send(message);
     }
 
-    public boolean sendWithAttach(String from, String to, String subject,
-                               String text, String attachName,
-                               InputStreamSource inputStream){
+    public boolean sendWithAttach(String from, String to, String toReply, String subject,String text, String attachName, byte[] pdf, byte[] xml){
     	try {
     		 MimeMessage message = mailSender.createMimeMessage();
     	        MimeMessageHelper helper = new MimeMessageHelper(message, true);
     	        helper.setFrom(from);
     	        helper.setTo(to);
+    	        if(toReply != null && !toReply.equals("")) {
+    	        	 helper.setReplyTo(toReply);
+    	        }    	       
     	        helper.setSubject(subject);
     	        helper.setText(text, true);
-    	        //helper.addAttachment(attachName, inputStream);
+    	        ByteArrayDataSource pdfAttch = new ByteArrayDataSource(pdf, "application/pdf");
+    	        helper.addAttachment(attachName+".pdf", pdfAttch);
+    	        ByteArrayDataSource xmlAttch = new ByteArrayDataSource(xml, "application/xml");
+    	        helper.addAttachment(attachName+".xml", xmlAttch);    	        
     	        mailSender.send(message);
     	        return true;
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
     	return false;
        

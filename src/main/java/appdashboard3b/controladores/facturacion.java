@@ -18,7 +18,6 @@ import appdashboard3b.beans.GenerarFactura;
 import appdashboard3b.beans.Rreimpresion;
 import appdashboard3b.beans.Solicitudes;
 import appdashboard3b.beans.Ticket;
-import appdashboard3b.modelos.Mcorreo;
 import appdashboard3b.modelos.Mfactura;
 import appdashboard3b.modelos.Mfclientes;
 import appdashboard3b.modelos.Mreimpresion;
@@ -36,10 +35,7 @@ public class facturacion {
 	Mfactura fa;
 	
 	@Autowired
-	Mreimpresion mr;
-	
-	@Autowired
-	Mcorreo co;
+	Mreimpresion mr;	
 	
 	@Autowired
 	Msolicitud so;
@@ -80,8 +76,7 @@ public class facturacion {
 	}
 	
 	@PostMapping("/correo")
-	public String correo(@RequestParam(required = true) String uuid) {	
-		 co.sendWithAttach("gus2392@hotmail.com", "gap@tiendas3b.com", "prueba", "prueba", "", null);
-		 return "";
+	public boolean correo(@RequestParam(required = true) String uuid, @RequestParam(required = true) String to, @RequestParam(required = true) String toReply) {			
+		 return mr.correo(uuid, to, toReply);
 	}
 }

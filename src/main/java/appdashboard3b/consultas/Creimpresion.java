@@ -3,7 +3,8 @@ package appdashboard3b.consultas;
 public enum Creimpresion {
 	GETFACRFC,
 	GETFACFOLIO,
-	GETFACFOLIOSERIE;
+	GETFACFOLIOSERIE,
+	GETFACUUID;
 	public String toString() {
 		switch(this) {
 			case GETFACRFC:
@@ -45,7 +46,15 @@ public enum Creimpresion {
 				+ "FROM   facturas\r\n"
 				+ "WHERE  serie = ?\r\n"
 				+ "       AND folio_factura = ? \r\n"
-				+ "ORDER  BY fecha_factura, uuid";			
+				+ "ORDER  BY fecha_factura, uuid";	
+			case GETFACUUID:
+				return
+				  "SELECT DISTINCT uuid,\r\n"
+				+ "                convert(varchar(max), xml) xml,\r\n"
+				+ "                pdfBase64 \r\n"	
+				+ "FROM   facturas\r\n"
+				+ "WHERE  uuid = ?\r\n"
+				+ "ORDER  BY  uuid";	
 			default:
 				return 
 				"";
