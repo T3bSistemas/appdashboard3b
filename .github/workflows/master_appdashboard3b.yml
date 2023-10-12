@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'appdashboard3b'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B191E9CF6A84BE6AD2DC771E0F52C00 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38F8EAE05B7E4F2188AAE8C491A9A3AF }}
           package: '*.jar'
