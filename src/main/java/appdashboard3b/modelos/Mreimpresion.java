@@ -70,8 +70,7 @@ public class Mreimpresion implements Ireimpresion{
 					String mensaje_mail = "Por medio de la presente le informamos que TIENDAS TRES B, SA DE CV\n" + 
 			    			"le ha enviado un nuevo Comprobante Fiscal Digital. Este comprobante esta disponible\n" + 
 			    			"como archivo adjunto a este correo.";
-					co.sendWithAttach("facturamicompra@t3b.com.mx", to, toReply, "Reenvío de Factura Tiendas 3B", mensaje_mail, uuid, pdf, xml);
-					return true;
+					return co.sendWithAttach("facturamicompra@t3b.com.mx", to, toReply, "Reenvío de Factura Tiendas 3B", mensaje_mail, uuid, pdf, xml);
 				}				
 			}		 
 		} catch (Exception e) {
