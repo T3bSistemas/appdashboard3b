@@ -71,7 +71,7 @@ public class Mreimpresion implements Ireimpresion{
 				}else {
 					destinos = new Address[2];
 					destinos[0] = new InternetAddress(to); 
-					destinos[0] = new InternetAddress(toReply); 
+					destinos[1] = new InternetAddress(toReply); 
 				}	 		
 		 		
 				String pdfBase64 	= rs.getString("pdfBase64");
