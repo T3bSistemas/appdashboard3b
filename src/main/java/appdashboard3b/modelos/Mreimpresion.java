@@ -1,9 +1,11 @@
 package appdashboard3b.modelos;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,18 +61,28 @@ public class Mreimpresion implements Ireimpresion{
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public boolean correo(String uuid, String to, String toReply) {
-		try {
+		try {			
 			SqlRowSet rs =  jdbcT.queryForRowSet(Creimpresion.GETFACUUID.toString(),uuid);	
 			if(rs.next()) {
+				Address[] destinos =  null;
+				if(toReply.isEmpty()) {
+					destinos = new Address[1];
+					destinos[0] = new InternetAddress(to); 
+				}else {
+					destinos = new Address[2];
+					destinos[0] = new InternetAddress(to); 
+					destinos[0] = new InternetAddress(toReply); 
+				}	 		
+		 		
 				String pdfBase64 	= rs.getString("pdfBase64");
 				String xmlbase 		= rs.getString("xml");
+				
 				if((pdfBase64 != null && !pdfBase64.equals("")) && (xmlbase != null && !xmlbase.equals(""))) {
-					byte[] pdf = Base64.getDecoder().decode(new String(pdfBase64).getBytes("UTF-8"));
-					byte[] xml = xmlbase.getBytes();
 					String mensaje_mail = "Por medio de la presente le informamos que TIENDAS TRES B, SA DE CV\n" + 
 			    			"le ha enviado un nuevo Comprobante Fiscal Digital. Este comprobante esta disponible\n" + 
 			    			"como archivo adjunto a este correo.";
-					return co.sendWithAttach("facturamicompra@t3b.com.mx", to, toReply, "Reenvío de Factura Tiendas 3B", mensaje_mail, uuid, pdf, xml);
+					return co.EnviarMail("facturamicompra@t3b.com.mx", destinos, mensaje_mail, "Reenvío de Factura Tiendas 3B",uuid,  xmlbase, pdfBase64);
+					
 				}				
 			}		 
 		} catch (Exception e) {

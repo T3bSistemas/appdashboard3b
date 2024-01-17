@@ -8,6 +8,22 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Address;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+
 @Service
 public class Mcorreo {
 	private JavaMailSender mailSender;
@@ -48,4 +64,86 @@ public class Mcorreo {
     	return false;
        
     }
+    
+	public boolean EnviarMail(String from, Address[] to, String mensaje, String titulo,String uuid, String xmlbase, String pdfBase64) {
+		try {
+	        Properties props = new Properties();
+	        props.setProperty("mail.smtp.host", "m.outlook.com");
+	        props.setProperty("mail.smtp.starttls.enable", "true");
+	        props.setProperty("mail.smtp.port", "587");
+	        props.setProperty("mail.smtp.user", from);
+	        props.setProperty("mail.smtp.auth", "true");    
+	        
+	        Session session = Session.getInstance(props, new Authenticator() {
+	            @Override
+	            protected PasswordAuthentication getPasswordAuthentication() {
+	                return new PasswordAuthentication(from,"Daz57292");
+	            }
+	        });
+	
+	
+	        BodyPart texto = new MimeBodyPart();
+	        texto.setText(mensaje);
+	        
+	        MimeMultipart multiParte = new MimeMultipart();
+	        
+	        if(!uuid.isEmpty()) {
+	        	if(!xmlbase.isEmpty()) {      
+		            MimeBodyPart filePart = new MimeBodyPart(); 
+		            DataSource ds;
+		            ds = new ByteArrayDataSource(xmlbase.getBytes(), "xml/*");
+		            filePart.setDataHandler(new DataHandler(ds));
+		            filePart.setFileName(uuid+".xml");
+		            multiParte.addBodyPart(filePart);
+	        	}
+	        	
+	        	if(!pdfBase64.isEmpty()) {
+	        		MimeBodyPart filePart = new MimeBodyPart(); 
+		            byte[] decoder = Base64.getDecoder().decode(pdfBase64);
+		            DataSource ds;
+		            ds = new ByteArrayDataSource(decoder, "pdf/*");
+		            filePart.setDataHandler(new DataHandler(ds));
+		            filePart.setFileName(uuid+".pdf");
+		            multiParte.addBodyPart(filePart);
+	        	}
+	            
+	        }
+	
+	        
+	        multiParte.addBodyPart(texto);   
+	        
+	        MimeMessage message = new MimeMessage(session);
+	        message.setFrom(new InternetAddress(from));
+	                    
+	        message.addRecipients(Message.RecipientType.TO, to);
+	        message.setSubject(titulo);
+	        message.setContent(multiParte);
+	
+	
+	        Transport t = session.getTransport("smtp");                  
+	        
+	        while(!t.isConnected()){
+	            t.connect(from, "Daz57292");
+	        }
+	        if(t.isConnected()){
+	            try{
+	                t.sendMessage(message, message.getAllRecipients());
+	                t.close();
+	                return true;
+	            }catch(Exception e){
+	                while(!t.isConnected()){
+	                    t.connect(from, "Daz57292");
+	                } 
+	                if(t.isConnected()){
+	                    t.sendMessage(message, message.getAllRecipients());
+	                    t.close();
+	                    return true;
+	                }
+	            }
+	        }                        
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}	   
 }
