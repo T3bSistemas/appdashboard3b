@@ -51,7 +51,7 @@ public class facturacion {
 	}
 	
 	@PostMapping("/setCliente")
-	public boolean setCliente(@RequestParam(required = true) Fclientes fclientes){	
+	public boolean setCliente(@RequestBody(required = true) Fclientes fclientes){	
 		return (fc.cliente(fclientes.getRfc()) != null)?fc.actualizar(fclientes):fc.insertar(fclientes);
 	}
 	
