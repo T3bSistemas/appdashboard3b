@@ -37,6 +37,7 @@ public class Mfclientes implements Ifclientes{
 	public boolean actualizar(Fclientes fclientes) {
 		try {
 			jdbcT.update(Cfclientes.ACTUALIZAR.toString(), fclientes.getRfc(), fclientes.getRazonSocial(), fclientes.getCorreo(), fclientes.getCorreo2(), fclientes.getDomicilio().getCalle(), fclientes.getDomicilio().getNumExt(), fclientes.getDomicilio().getNumInt(), fclientes.getDomicilio().getColonia(), fclientes.getDomicilio().getMunAlc(), fclientes.getDomicilio().getEstado(), fclientes.getDomicilio().getPais(), fclientes.getDomicilio().getCp(), false, fclientes.getUsoCFDI(), fclientes.getRegimenFiscal(), fclientes.getRfc());
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,6 +48,7 @@ public class Mfclientes implements Ifclientes{
 	public boolean insertar(Fclientes fclientes) {
 		try {
 			jdbcT.update(Cfclientes.INSRTAR.toString(), fclientes.getRfc(), fclientes.getRazonSocial(), fclientes.getCorreo(), fclientes.getCorreo2(), fclientes.getDomicilio().getCalle(), fclientes.getDomicilio().getNumExt(), fclientes.getDomicilio().getNumInt(), fclientes.getDomicilio().getColonia(), fclientes.getDomicilio().getMunAlc(), fclientes.getDomicilio().getEstado(), fclientes.getDomicilio().getPais(), fclientes.getDomicilio().getCp(), false, fclientes.getUsoCFDI(), fclientes.getRegimenFiscal());
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
