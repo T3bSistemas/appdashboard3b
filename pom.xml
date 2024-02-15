@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>appdashboard3b</groupId>
-	<artifactId>t3b-facturacion-data-info</artifactId>
+	<artifactId>appdashboard3b</artifactId>
 	<version>1.0.0</version>
 	<name>appdashboard3b</name>
 	<description>Informacion de SQL</description>

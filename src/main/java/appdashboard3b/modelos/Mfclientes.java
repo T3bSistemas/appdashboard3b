@@ -24,7 +24,7 @@ public class Mfclientes implements Ifclientes{
 		try {		
 			SqlRowSet rs = jdbcT.queryForRowSet(Cfclientes.FClientes.toString(), rfc);	
 			if(rs.next()) {
-				return new Fclientes(rs.getString("crfc"), rs.getString("cnombre"), rs.getString("cemail"), "facturamicompra@t3b.com.mx", rs.getString("regimen_fiscal"), rs.getString("uso_cfdi") , 
+				return new Fclientes(rs.getString("crfc"), rs.getString("cnombre"), rs.getString("cemail"), (rs.getString("cemail2") != null && !rs.getString("cemail2").equals(""))?rs.getString("cemail2"):"facturamicompra@t3b.com.mx", rs.getString("regimen_fiscal"), rs.getString("uso_cfdi") , 
 					   new Domicilio(rs.getString("ccalle"), rs.getString("ccolonia"), rs.getString("ccp"), rs.getString("cestado"), rs.getString("cmunicipio"), rs.getString("cnumext"), rs.getString("cnumint"), rs.getString("cpais")));
 			}
 		} catch (Exception e) {
