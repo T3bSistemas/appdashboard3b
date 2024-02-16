@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Java version
         uses: actions/setup-java@v1
@@ -25,7 +25,7 @@ jobs:
         run: mvn clean install
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
@@ -36,12 +36,21 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+    permissions:
+      id-token: write #This is required for requesting the JWT
+  
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: java-app
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8AA3DF64344F45E39B0EC64EF9D62938 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8104C92AC2EB494996C3A31A5D254E0D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5F4F8B181F914A1C819DA39D288A83C9 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -49,5 +58,5 @@ jobs:
         with:
           app-name: 'appdashboard3b'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38F8EAE05B7E4F2188AAE8C491A9A3AF }}
           package: '*.jar'
+          
