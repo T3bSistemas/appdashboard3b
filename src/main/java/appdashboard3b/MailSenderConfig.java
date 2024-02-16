@@ -13,8 +13,8 @@ public class MailSenderConfig {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
         sender.setHost("m.outlook.com");
         sender.setPort(587);
-        sender.setUsername("facturamicompra@t3b.com.mx");
-        sender.setPassword("FoiqU8UM");
+        sender.setUsername("3befact-noreply@t3b.com.mx");
+        sender.setPassword("Daz57292");
 
         Properties props = sender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

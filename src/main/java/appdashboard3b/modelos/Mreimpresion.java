@@ -81,7 +81,7 @@ public class Mreimpresion implements Ireimpresion{
 					String mensaje_mail = "Por medio de la presente le informamos que TIENDAS TRES B, SA DE CV\n" + 
 			    			"le ha enviado un nuevo Comprobante Fiscal Digital. Este comprobante esta disponible\n" + 
 			    			"como archivo adjunto a este correo.";
-					return co.EnviarMail("facturamicompra@t3b.com.mx", destinos, mensaje_mail, "Reenvío de Factura Tiendas 3B",uuid,  xmlbase, pdfBase64);
+					return co.EnviarMail("3befact-noreply@t3b.com.mx", destinos, mensaje_mail, "Reenvío de Factura Tiendas 3B",uuid,  xmlbase, pdfBase64);
 					
 				}				
 			}		 
