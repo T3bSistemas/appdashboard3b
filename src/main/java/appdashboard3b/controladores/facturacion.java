@@ -42,7 +42,7 @@ public class facturacion {
 	
 	@GetMapping({"/",""})
 	public String inicio(){		
-		return "Facturacion T3B Das V 1.0 ";
+		return "Facturacion T3B Dashboard V 1.0 ";
 	}
 	
 	@PostMapping("/cliente")
