@@ -35,7 +35,7 @@ public class Mfactura implements Ifactura{
 		try {		
 			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Facturas.toString(), ticket.getRegion(), ticket.getTienda(), ticket.getTicket(), ticket.getCaja(), ticket.getFechaCompra());	
 			if(rs.next()) {	
-				ticket.setFolio("F: "+rs.getString("folio_factura"));
+				ticket.setFolio("F: "+rs.getString("folio_factura")+ " "+rs.getString("serie"));
 				return new ExisteFactura(1, ticket);
 			}else {
 				rs = jdbcT.queryForRowSet(Cfactura.Solicitud.toString(), ticket.getTienda(), ticket.getCaja(), ticket.getTicket(), ticket.getFechaCompra());	
@@ -44,8 +44,9 @@ public class Mfactura implements Ifactura{
 					ticket.setFolio((tipo)?"VS: "+rs.getString("folio_sol"):"S: "+rs.getString("folio_sol"));
 					return (tipo)?new ExisteFactura(3, ticket):new ExisteFactura(2, ticket);
 				}else {
+					//ticket.setRegion(ultimaRegionTienda(ticket.getTienda()));
 					if(ticket.getRegion() != null) {
-						if(!ticket.getRegion().trim().equals("")) {
+						if(!ticket.getRegion().trim().equals("")) {							
 							try {
 								rs = jdbcT.queryForRowSet(Cconexiones.PFT_CONEXIONES.toString(), ticket.getRegion());	
 								if(rs.next()) {
@@ -142,6 +143,20 @@ public class Mfactura implements Ifactura{
 			}					
 		}			
 		return false;
+	}
+
+	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public String ultimaRegionTienda(Integer tienda) {
+		try {
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.RegionFac.toString(), tienda);	
+			if(rs.next()) {	
+				return rs.getString("num_region");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 

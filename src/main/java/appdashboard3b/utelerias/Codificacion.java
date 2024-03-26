@@ -13,9 +13,14 @@ public class Codificacion {
 		return data;
 	}
 	
-	public static void main(String ar[]) {
-		System.out.println(new Codificacion().toStringBase64(
-				""
-				));
+	public String toBase64String(String data) {
+		String cadenaDecodificada = "";
+		try {
+			byte[] bytesDecodificados = Base64.getDecoder().decode(data);
+	        	   cadenaDecodificada = new String(bytesDecodificados);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return cadenaDecodificada;
 	}
 }

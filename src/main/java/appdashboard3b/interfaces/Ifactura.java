@@ -7,4 +7,5 @@ import appdashboard3b.beans.Ticket;
 public interface Ifactura {
 	public ExisteFactura existeFactura(Ticket ticket);
 	public boolean guardarFactura(GenerarFactura genera);
+	public String ultimaRegionTienda(Integer tienda);
 }

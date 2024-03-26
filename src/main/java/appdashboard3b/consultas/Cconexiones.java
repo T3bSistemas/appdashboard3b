@@ -7,18 +7,9 @@ public enum Cconexiones {
 		switch(this) {
 			case PFT_CONEXIONES:
 				return
-				  "SELECT tclave,\r\n"
-				+ "       host,\r\n"
-				+ "       puerto,\r\n"
-				+ "       servicio,\r\n"
-				+ "       base,\r\n"
-				+ "       driver,\r\n"
-				+ "       url\r\n"
-				+ "FROM   pft_conexiones pc\r\n"
-				+ "WHERE  pc.tclave = ? ";
+				  "SELECT tclave, host, puerto, servicio, base, driver, url FROM pft_conexiones pc WHERE pc.tclave = ? ";
 			default:
-				return
-				"";	
+				return "";	
 		}
 	}
 }

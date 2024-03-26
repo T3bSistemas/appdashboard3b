@@ -8,172 +8,31 @@ public enum Cfactura {
 	ISolicitud,
 	IFacturas,
 	IFacturasD,
-	IFacturasT;
+	IFacturasT,
+	RegionFac;
 	
 	public String toString() {
 		switch(this) {
 			case Facturas:
-				return
-				    "SELECT folio_factura,\r\n"
-				  + "       num_ticket,\r\n"
-				  + "       num_tienda,\r\n"
-				  + "       num_region,\r\n"
-				  + "       caja,\r\n"
-				  + "       fecha_compra,\r\n"
-				  + "       fecha_factura,\r\n"
-				  + "       uuid,\r\n"
-				  + "       xml,\r\n"
-				  + "       serie,\r\n"
-				  + "       rfc,\r\n"
-				  + "       correo,\r\n"
-				  + "       total,\r\n"
-				  + "       subtotal,\r\n"
-				  + "       iva,\r\n"
-				  + "       ieps,\r\n"
-				  + "       id_factura\r\n"
-				  + "FROM   facturas\r\n"
-				  + "WHERE  num_region = ?\r\n"
-				  + "       AND num_tienda = ?\r\n"
-				  + "       AND num_ticket = ?\r\n"
-				  + "       AND caja = ?\r\n"
-				  + "       AND fecha_compra = ? ";
+				return "SELECT folio_factura, num_ticket, num_tienda, num_region, caja, fecha_compra, fecha_factura, uuid, xml, serie, rfc, correo, total, subtotal, iva, ieps, id_factura FROM facturas WHERE num_region = ? AND num_tienda = ? AND num_ticket = ? AND caja = ? AND fecha_compra = ? ";
 			case FolioSol:
-				return
-				   "SELECT folio\r\n"
-				  + "FROM   folios\r\n"
-				  + "WHERE  documento='SOL'";
+				return "SELECT folio FROM folios WHERE documento='SOL'";
 			case FolioSolU:
-				return
-				    "UPDATE folios\r\n"
-				  + "SET    folio = folio + 1\r\n"
-				  + "WHERE  documento = 'SOL' ";
+				return "UPDATE folios SET folio = folio + 1 WHERE documento = 'SOL' ";
 			case Solicitud:
-				return
-				    "SELECT status_sol,\r\n"
-				  + "       rfc,\r\n"
-				  + "       tclave,\r\n"
-				  + "       num_caja,\r\n"
-				  + "       num_ticket,\r\n"
-				  + "       fecha_compra,\r\n"
-				  + "       fecha_sol,\r\n"
-				  + "       descripcion,\r\n"
-				  + "       num_factura,\r\n"
-				  + "       folio_sol,\r\n"
-				  + "       tipo,\r\n"
-				  + "       solicitud_id,\r\n"
-				  + "       sucursal\r\n"
-				  + "FROM   solicitudes\r\n"
-				  + "WHERE  tclave = ?\r\n"
-				  + "       AND num_caja = ?\r\n"
-				  + "       AND num_ticket = ?\r\n"
-				  + "       AND fecha_compra = ?\r\n"
-				  + "       AND descripcion NOT LIKE '%RFC%'\r\n"
-				  + "       AND status_sol <> 3 ";
+				return "SELECT status_sol, rfc, tclave, num_caja, num_ticket, fecha_compra, fecha_sol, descripcion, num_factura, folio_sol, tipo, solicitud_id, sucursal FROM solicitudes WHERE tclave = ? AND num_caja = ? AND num_ticket = ? AND fecha_compra = ? AND descripcion NOT LIKE '%RFC%' AND status_sol <> 3 ";
 			case ISolicitud:
-				return
-				    "INSERT INTO solicitudes\r\n"
-				  + "            (fecha_sol,\r\n"
-				  + "             status_sol,\r\n"
-				  + "             rfc,\r\n"
-				  + "             tclave,\r\n"
-				  + "             fecha_compra,\r\n"
-				  + "             num_caja,\r\n"
-				  + "             num_ticket,\r\n"
-				  + "             descripcion,\r\n"
-				  + "             num_factura,\r\n"
-				  + "             folio_sol,\r\n"
-				  + "             tipo,\r\n"
-				  + "             sucursal)\r\n"
-				  + "VALUES     (Getdate(),\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?) ";
+				return "INSERT INTO solicitudes (fecha_sol, status_sol, rfc, tclave, fecha_compra, num_caja, num_ticket, descripcion, num_factura, folio_sol, tipo, sucursal) VALUES (Getdate(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturas:
-				return
-				    "INSERT INTO facturas\r\n"
-				  + "            (folio_factura,\r\n"
-				  + "             num_ticket,\r\n"
-				  + "             num_tienda,\r\n"
-				  + "             num_region,\r\n"
-				  + "             caja,\r\n"
-				  + "             fecha_compra,\r\n"
-				  + "             fecha_factura,\r\n"
-				  + "             uuid,\r\n"
-				  + "             xml,\r\n"
-				  + "             serie,\r\n"
-				  + "             rfc,\r\n"
-				  + "             correo,\r\n"
-				  + "             total,\r\n"
-				  + "             subtotal,\r\n"
-				  + "             iva,\r\n"
-				  + "             ieps,\r\n"
-				  + "             pdfBase64)\r\n"
-				  + "VALUES     (?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            CONVERT(date,GETDATE()),\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?) "; 
+				return "INSERT INTO facturas (folio_factura, num_ticket, num_tienda, num_region, caja, fecha_compra, fecha_factura, uuid, xml, serie, rfc, correo, total, subtotal, iva, ieps, pdfBase64) VALUES (?, ?, ?, ?, ?, ?, CONVERT(date,GETDATE()), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "; 
 			case IFacturasD:
-				return
-				    "INSERT INTO factura_detalle\r\n"
-				  + "            (folio_factura,\r\n"
-				  + "             serie,\r\n"
-				  + "             num_tienda,\r\n"
-				  + "             num_region,\r\n"
-				  + "             cve_producto,\r\n"
-				  + "             cve_prod_sat,\r\n"
-				  + "             valor_unit,\r\n"
-				  + "             cantidad,\r\n"
-				  + "             subtotal,\r\n"
-				  + "             ieps_prc,\r\n"
-				  + "             ieps_monto,\r\n"
-				  + "             iva_prc,\r\n"
-				  + "             iva_monto)\r\n"
-				  + "VALUES     (?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?,\r\n"
-				  + "            ?) ";
+				return "INSERT INTO factura_detalle (folio_factura, serie, num_tienda, num_region, cve_producto, cve_prod_sat, valor_unit, cantidad, subtotal, ieps_prc, ieps_monto, iva_prc, iva_monto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturasT:
-				return
-				    "INSERT INTO factura_ticket\r\n"
-				  + "            (factura_id,\r\n"
-				  + "             fac_det_id,\r\n"
-				  + "             idesc)\r\n"
-				  + "VALUES      (?,\r\n"
-				  + "             ?,\r\n"
-				  + "             ?); ";
+				return "INSERT INTO factura_ticket (factura_id, fac_det_id, idesc) VALUES (?, ?, ?); "; 
+			case RegionFac:
+				return "SELECT top 1 num_region FROM Facturas WHERE fecha_factura = CONVERT(date,GETDATE()) AND num_tienda = ?";
 			default:
-				return
-				"";	
+				return "";	
 		}
 	}
 }

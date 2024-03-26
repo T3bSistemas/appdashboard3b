@@ -1,0 +1,42 @@
+{"properties": [
+  {
+    "name": "conexion.ecom.host",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.ecom.host'"
+  },
+  {
+    "name": "conexion.ecom.user",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.ecom.user'"
+  },
+  {
+    "name": "conexion.acrcloud.host",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.acrcloud.host'"
+  },
+  {
+    "name": "conexion.yema.host",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.yema.host'"
+  },
+  {
+    "name": "conexion.acrcloud.user",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.acrcloud.user'"
+  },
+  {
+    "name": "conexion.yema.pass",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.yema.pass'"
+  },
+  {
+    "name": "conexion.vtn.pass",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.vtn.pass'"
+  },
+  {
+    "name": "conexion.yema.user",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.yema.user'"
+  }
+]}

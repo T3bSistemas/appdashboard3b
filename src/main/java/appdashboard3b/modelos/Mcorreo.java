@@ -3,10 +3,14 @@ package appdashboard3b.modelos;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import appdashboard3b.utelerias.Codificacion;
 
 import java.util.Base64;
 import java.util.Properties;
@@ -26,6 +30,9 @@ import javax.mail.internet.MimeMultipart;
 
 @Service
 public class Mcorreo {
+	@Autowired
+	Environment env;
+	
 	private JavaMailSender mailSender;
 
     public Mcorreo(JavaMailSender mailSender) {
@@ -68,16 +75,16 @@ public class Mcorreo {
 	public boolean EnviarMail(String from, Address[] to, String mensaje, String titulo,String uuid, String xmlbase, String pdfBase64) {
 		try {
 	        Properties props = new Properties();
-	        props.setProperty("mail.smtp.host", "m.outlook.com");
+	        props.setProperty("mail.smtp.host", env.getProperty("spring.mail.host"));
 	        props.setProperty("mail.smtp.starttls.enable", "true");
-	        props.setProperty("mail.smtp.port", "587");
+	        props.setProperty("mail.smtp.port", env.getProperty("spring.mail.port"));
 	        props.setProperty("mail.smtp.user", from);
 	        props.setProperty("mail.smtp.auth", "true");    
 	        
 	        Session session = Session.getInstance(props, new Authenticator() {
 	            @Override
 	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication(from,"Daz57292");
+	                return new PasswordAuthentication(from,new Codificacion().toBase64String(env.getProperty("spring.mail.password")));
 	            }
 	        });
 	

@@ -8,56 +8,15 @@ public enum Creimpresion {
 	public String toString() {
 		switch(this) {
 			case GETFACRFC:
-				return
-				  "SELECT DISTINCT uuid,\r\n"
-				+ "                serie,\r\n"
-				+ "                folio_factura,\r\n"
-				+ "                correo,\r\n"
-				+ "                fecha_factura,\r\n"
-				+ "                1 id_factura,\r\n"
-				+ "                convert(varchar(max), xml) xml,\r\n"
-				+ "                pdfBase64 \r\n"				
-				+ "FROM   facturas\r\n"
-				+ "WHERE  rfc = ?\r\n"
-				+ "       AND fecha_factura BETWEEN ? AND ?\r\n"
-				+ "ORDER  BY fecha_factura,\r\n"
-				+ "          serie,\r\n"
-				+ "          folio_factura";
+				return "SELECT DISTINCT uuid, serie, folio_factura, correo, fecha_factura, 1 id_factura, convert(varchar(max), xml) xml, pdfBase64 FROM facturas WHERE rfc = ? AND fecha_factura BETWEEN ? AND ? ORDER BY fecha_factura, serie, folio_factura ";
 			case GETFACFOLIO:
-				return
-				  "SELECT DISTINCT uuid,\r\n"
-				+ "                folio_factura,\r\n"
-				+ "                num_ticket,\r\n"
-				+ "                correo,\r\n"
-				+ "                fecha_factura,\r\n"
-				+ "                convert(varchar(max), xml) xml,\r\n"
-				+ "                pdfBase64 \r\n"	
-				+ "FROM   facturas\r\n"
-				+ "WHERE  folio_factura = ? ";
+				return "SELECT DISTINCT uuid, folio_factura, num_ticket, correo, fecha_factura, convert(varchar(max), xml) xml, pdfBase64 FROM facturas WHERE folio_factura = ?  ";
 			case GETFACFOLIOSERIE:
-				return
-				  "SELECT DISTINCT uuid,\r\n"
-				+ "                folio_factura,\r\n"
-				+ "                num_ticket,\r\n"
-				+ "                correo,\r\n"
-				+ "                fecha_factura,\r\n"
-				+ "                convert(varchar(max), xml) xml,\r\n"
-				+ "                pdfBase64 \r\n"	
-				+ "FROM   facturas\r\n"
-				+ "WHERE  serie = ?\r\n"
-				+ "       AND folio_factura = ? \r\n"
-				+ "ORDER  BY fecha_factura, uuid";	
+				return "SELECT DISTINCT uuid, folio_factura, num_ticket, correo, fecha_factura, convert(varchar(max), xml) xml, pdfBase64 FROM facturas WHERE serie = ? AND folio_factura = ? ORDER BY fecha_factura, uuid ";	
 			case GETFACUUID:
-				return
-				  "SELECT DISTINCT uuid,\r\n"
-				+ "                convert(varchar(max), xml) xml,\r\n"
-				+ "                pdfBase64 \r\n"	
-				+ "FROM   facturas\r\n"
-				+ "WHERE  uuid = ?\r\n"
-				+ "ORDER  BY  uuid";	
+				return "SELECT DISTINCT uuid, convert(varchar(max), xml) xml, pdfBase64 FROM facturas WHERE uuid = ? ORDER BY uuid ";	
 			default:
-				return 
-				"";
+				return "";
 		}
 	}
 }
