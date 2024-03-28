@@ -3,6 +3,7 @@ package appdashboard3b.beans;
 import java.util.List;
 
 
+
 public class GenerarFactura {
 	Fclientes fclientes;
 	List<Ticket> tickets;
@@ -27,4 +28,10 @@ public class GenerarFactura {
 	public void setTickets(List<Ticket> tickets) {
 		this.tickets = tickets;
 	}
+	
+	@Override
+	public String toString() {
+		return "{fclientes:" + fclientes + ", tickets:" + tickets + "}";
+	}
+	
 }

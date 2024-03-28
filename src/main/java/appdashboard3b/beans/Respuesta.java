@@ -1,48 +1,92 @@
 package appdashboard3b.beans;
 
 public class Respuesta {
-	private String 	codigo;
-	private Integer tienda;
-	private String 	pdf;
-	private String 	xml;
+	private String	xml;
+	private String	fechaCompra;
+	private Integer	tienda;
+	private String	ticket;
+	private String	caja;
+	private String	folio;
+	private String	serie;	
+
 	
 	public Respuesta() {
 		super();
-		// TODO Auto-generated constructor stub
-	}	
-	public Respuesta(String codigo, Integer tienda, String pdf, String xml) {
+	}
+	
+	
+	public Respuesta(String xml, String fechaCompra, Integer tienda, String ticket, String caja, String folio,
+			String serie) {
 		super();
-		this.codigo = codigo;
-		this.tienda = tienda;
-		this.pdf = pdf;
 		this.xml = xml;
+		this.fechaCompra = fechaCompra;
+		this.tienda = tienda;
+		this.ticket = ticket;
+		this.caja = caja;
+		this.folio = folio;
+		this.serie = serie;
 	}
-	public String getCodigo() {
-		return codigo;
-	}
-	public String getPdf() {
-		return pdf;
-	}
+
+
 	public String getXml() {
 		return xml;
 	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-	public void setPdf(String pdf) {
-		this.pdf = pdf;
-	}
+
 	public void setXml(String xml) {
 		this.xml = xml;
 	}
+
+	public String getFechaCompra() {
+		return fechaCompra;
+	}
+
+	public void setFechaCompra(String fechaCompra) {
+		this.fechaCompra = fechaCompra;
+	}
+
 	public Integer getTienda() {
 		return tienda;
 	}
+
 	public void setTienda(Integer tienda) {
 		this.tienda = tienda;
 	}
+
+	public String getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
+
+	public String getCaja() {
+		return caja;
+	}
+
+	public void setCaja(String caja) {
+		this.caja = caja;
+	}
+
+	public String getFolio() {
+		return folio;
+	}
+
+	public void setFolio(String folio) {
+		this.folio = folio;
+	}
+
+	public String getSerie() {
+		return serie;
+	}
+	
+	public void setSerie(String serie) {
+		this.serie = serie;
+	}
+
 	@Override
 	public String toString() {
-		return "Respuesta [codigo=" + codigo + ", tienda=" + tienda + ", pdf=" + pdf + ", xml=" + xml + "]";
+		return "Respuesta [xml=" + xml + ", fechaCompra=" + fechaCompra + ", tienda=" + tienda + ", ticket="
+				+ ticket + ", caja=" + caja + ", folio=" + folio + ", serie=" + serie + "]";
 	}
 }

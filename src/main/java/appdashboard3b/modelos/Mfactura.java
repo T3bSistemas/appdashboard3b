@@ -1,5 +1,9 @@
 package appdashboard3b.modelos;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import appdashboard3b.beans.DetalleTickets;
 import appdashboard3b.beans.ExisteFactura;
 import appdashboard3b.beans.Fclientes;
 import appdashboard3b.beans.GenerarFactura;
@@ -44,7 +49,6 @@ public class Mfactura implements Ifactura{
 					ticket.setFolio((tipo)?"VS: "+rs.getString("folio_sol"):"S: "+rs.getString("folio_sol"));
 					return (tipo)?new ExisteFactura(3, ticket):new ExisteFactura(2, ticket);
 				}else {
-					//ticket.setRegion(ultimaRegionTienda(ticket.getTienda()));
 					if(ticket.getRegion() != null) {
 						if(!ticket.getRegion().trim().equals("")) {							
 							try {
@@ -147,17 +151,116 @@ public class Mfactura implements Ifactura{
 
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public String ultimaRegionTienda(Integer tienda) {
+	public String regionTienda(String fecha, Integer tienda) {
 		try {
-			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.RegionFac.toString(), tienda);	
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Region.toString(),fecha, tienda);	
 			if(rs.next()) {	
-				return rs.getString("num_region");
+				return rs.getString("talmacen");
+			}else {
+				SqlRowSet rs2 = jdbcT.queryForRowSet(Cfactura.RegionAnt.toString(), tienda);	
+				if(rs2.next()) {	
+					return rs2.getString("talmacen");
+				}				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return "1004";
+	}
+
+	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public DetalleTickets getTicketsDetalles(List<Ticket> tickets) {
+		Map<String, String> formasdepago = formasdepago();
+		try {
+			if(formasdepago.size() > 0) {
+				for (Ticket ticket : tickets) {
+					int tipoPago = (ticket.getTipoPago() != null && !ticket.getTipoPago().equals(""))?Integer.parseInt(ticket.getTipoPago()):0;
+					String 	claveSAT = formasdepago.containsKey(tipoPago+"")?formasdepago.get(tipoPago+""):"" ;
+					if(!claveSAT.equals("")) {
+						claveSAT = (claveSAT.length() == 1)?"0"+claveSAT:claveSAT;
+						SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Serie.toString(), ticket.getTienda());
+						if(rs.next()) {
+							String tdir			=	rs.getString("tdir");
+							       tdir         =  (tdir!=null)?tdir.trim():tdir;
+							String tncrvendflag	=	rs.getString("tncrvendflag");
+								   tncrvendflag =  (tncrvendflag!=null)?tncrvendflag.trim():tncrvendflag;
+							String temail		=	rs.getString("temail");
+								   temail       =  (temail!=null)?temail.trim():temail;
+							if(!isNull(tdir) && !isNull(tncrvendflag)) {
+								ticket.setTicketAdi(claveSAT, tdir, tncrvendflag, temail);
+								List<TicketDetalle> Listdetalle = new ArrayList<TicketDetalle>();;
+								if(ticket.getDetalles().size() > 0) {
+									for (TicketDetalle detalle : ticket.getDetalles()) {
+										if( detalle.getAtmacant() > 0 && detalle.getAtmventa()> 0d) {	
+											SqlRowSet rs2 = jdbcT.queryForRowSet(Cfactura.IvaiEps.toString(), detalle.getIclave());
+											if(rs2.next()) {
+												String CClaveUnidad 	= rs2.getString("c_ClaveUnidad");
+													   CClaveUnidad     = (CClaveUnidad!=null)?CClaveUnidad.trim():CClaveUnidad;	
+												String CClaveProdServ	= rs2.getString("c_ClaveProdServ");
+													   CClaveProdServ     = (CClaveProdServ!=null)?CClaveProdServ.trim():CClaveProdServ;
+												if(detalle.getAtmdesc() != null && detalle.getAtmdesc().equals("PS")) {
+														continue;														
+												}else {
+													Listdetalle.add(new TicketDetalle(detalle.getIclave(), detalle.getAtmacant(), detalle.getAtmventa(), detalle.getIvClave(), detalle.getIeClave(), rs2.getString("idesc"), rs2.getString("iunidad"), CClaveUnidad.equals("") ?"H87":CClaveUnidad , CClaveProdServ.equals("") ?"01010101":CClaveProdServ, rs2.getString("iv_factor"), rs2.getString("ie_factor"), detalle.getAtmventa()*rs2.getDouble("iv_factor"), detalle.getAtmventa()*rs2.getDouble("ie_factor"), detalle.getAtmdesc(), detalle.getGclave(), detalle.getLclave()));
+												}														
+											}
+										}
+									}
+								}
+								
+								if(Listdetalle != null && Listdetalle.size() > 0) {
+									ticket.setDetalle(Listdetalle);										
+								}else {
+									return new DetalleTickets(5, "Problemas de datos, Detalle de ticket IVA IEPS", null);
+								}
+							}else {
+								return new DetalleTickets(4, "Problemas de datos, detalle tienda CP y Serie", null);
+							}
+						}else {
+							return new DetalleTickets(4, "Problemas de datos, detalle ticket Serie", null);
+						}
+					}else {
+						return new DetalleTickets(3, "Problemas de datos, detalle ticket formasdepago no existe", null);
+					}					 				
+				}
+			}else {
+				return new DetalleTickets(2, "Problemas de datos, detalle ticket formasdepago", null);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new DetalleTickets(1, "Problemas de datos", null);
+		}
+		return new DetalleTickets(0, "", tickets);
+	}
+
+	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public Map<String, String> formasdepago() {
+		Map<String, String> formasdepago = new HashMap<String, String>();
+		try {
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.FormasdePago.toString());
+			while(rs.next()) {
+				formasdepago.put(rs.getString("fp_clave").trim(), rs.getString("clave_sat").trim());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return formasdepago;
 	}
 	
+	public boolean isNull(String data) {
+		try {
+			if(data != null) {
+				if(!data.trim().equals("")) {
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 
 }

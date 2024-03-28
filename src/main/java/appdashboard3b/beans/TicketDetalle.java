@@ -23,14 +23,20 @@ public class TicketDetalle {
 	private Double  ivaPrc;
 	private Double  ivaMont;
 	
+	private String 	atmdesc;
+	private String 	gclave;
+	private String 	lclave;
+	
 	public TicketDetalle() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	
 	public TicketDetalle(String iclave, Integer atmacant, Double atmventa, String ivClave, String ieClave, String idesc,
 			String iunidad, String CClaveUnidad, String CClaveProdServ, String IVfactor, String IEfactor,
-			Double iva, Double ieps) {
+			Double iva, Double ieps, String atmdesc, String gclave, String lclave) {
 		super();
 		this.iclave = iclave;
 		this.atmacant = atmacant;
@@ -45,18 +51,37 @@ public class TicketDetalle {
 		this.IEfactor = IEfactor;
 		Iva = iva;
 		Ieps = ieps;
+		this.atmdesc = atmdesc;
+		this.gclave = gclave;
+		this.lclave = lclave;
+	}
+	
+	public TicketDetalle(String iunidad, String CClaveUnidad, String CClaveProdServ, String IVfactor, String IEfactor,
+			Double iva, Double ieps) {
+		super();
+		this.iunidad = iunidad;
+		this.CClaveUnidad = CClaveUnidad;
+		this.CClaveProdServ = CClaveProdServ;
+		this.IVfactor = IVfactor;
+		this.IEfactor = IEfactor;
+		Iva = iva;
+		Ieps = ieps;
 	}
 
 
 
-	public TicketDetalle(String  iclave, Integer atmacant, Double atmventa, String ivClave, String ieClave) {
+	public TicketDetalle(String  iclave, Integer atmacant, Double atmventa, String ivClave, String ieClave, String atmdesc, String gclave, String lclave) {
 		super();
 		this.iclave = iclave;
 		this.atmacant = atmacant;
 		this.atmventa = atmventa;
 		this.ivClave = ivClave;
 		this.ieClave = ieClave;
+		this.atmdesc = atmdesc;
+		this.gclave = gclave;
+		this.lclave = lclave;
 	}
+	
 	
 	public String getIclave() {
 		return iclave;
@@ -161,7 +186,7 @@ public class TicketDetalle {
 	public void setIeps(Double ieps) {
 		Ieps = ieps;
 	}
-
+	
 	public Double getValUnit() {
 		return valUnit;
 	}
@@ -197,17 +222,65 @@ public class TicketDetalle {
 	public void setIepsPrc(Double iepsPrc) {
 		this.iepsPrc = iepsPrc;
 	}
-
+	
 	public void setIepsMont(Double iepsMont) {
 		this.iepsMont = iepsMont;
 	}
-
+	
 	public void setIvaPrc(Double ivaPrc) {
 		this.ivaPrc = ivaPrc;
 	}
 
 	public void setIvaMont(Double ivaMont) {
 		this.ivaMont = ivaMont;
+	}
+
+
+
+	public String getAtmdesc() {
+		return atmdesc;
+	}
+
+
+
+	public String getGclave() {
+		return gclave;
+	}
+
+
+
+	public String getLclave() {
+		return lclave;
+	}
+
+
+
+	public void setAtmdesc(String atmdesc) {
+		this.atmdesc = atmdesc;
+	}
+
+
+
+	public void setGclave(String gclave) {
+		this.gclave = gclave;
+	}
+
+
+
+	public void setLclave(String lclave) {
+		this.lclave = lclave;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "{iclave:" + iclave + ", atmacant:" + atmacant + ", atmventa:" + atmventa + ", ivClave:"
+				+ ivClave + ", ieClave:" + ieClave + ", idesc:" + idesc + ", iunidad:" + iunidad + ", CClaveUnidad:"
+				+ CClaveUnidad + ", CClaveProdServ:" + CClaveProdServ + ", IVfactor:" + IVfactor + ", IEfactor:"
+				+ IEfactor + ", Iva:" + Iva + ", Ieps:" + Ieps + ", valUnit:" + valUnit + ", subtotal:" + subtotal
+				+ ", iepsPrc:" + iepsPrc + ", iepsMont:" + iepsMont + ", ivaPrc:" + ivaPrc + ", ivaMont:" + ivaMont
+				+ ", atmdesc:" + atmdesc + ", gclave:" + gclave + ", lclave:" + lclave + "}";
 	}
 
 	

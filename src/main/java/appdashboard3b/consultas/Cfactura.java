@@ -9,7 +9,11 @@ public enum Cfactura {
 	IFacturas,
 	IFacturasD,
 	IFacturasT,
-	RegionFac;
+	Region,
+	RegionAnt,
+	FormasdePago,
+	Serie,
+	IvaiEps;
 	
 	public String toString() {
 		switch(this) {
@@ -29,8 +33,16 @@ public enum Cfactura {
 				return "INSERT INTO factura_detalle (folio_factura, serie, num_tienda, num_region, cve_producto, cve_prod_sat, valor_unit, cantidad, subtotal, ieps_prc, ieps_monto, iva_prc, iva_monto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturasT:
 				return "INSERT INTO factura_ticket (factura_id, fac_det_id, idesc) VALUES (?, ?, ?); "; 
-			case RegionFac:
-				return "SELECT top 1 num_region FROM Facturas WHERE fecha_factura = CONVERT(date,GETDATE()) AND num_tienda = ?";
+			case Region:
+				return "select talmacen from ftiendas_por_almacen_det where fecha = ? and tclave = ?";
+			case RegionAnt:
+				return "select max(fecha),talmacen from ftiendas_por_almacen_det where tclave = ? group by talmacen";
+			case FormasdePago:
+				return "select fp_clave , clave_sat from formas_pago";
+			case Serie:
+				return "SELECT t.tdir, t.tncrvendflag, t.temail FROM ftiendas t WHERE t.tclave = ? ";
+			case IvaiEps:
+				return "SELECT iclave,idesc,iunidad,iventa,c_ClaveUnidad,c_ClaveProdServ,iv_factor,ie_factor FROM farticulos where iclave = ?";
 			default:
 				return "";	
 		}

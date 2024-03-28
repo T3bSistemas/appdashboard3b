@@ -8,7 +8,6 @@ public class Catalogos {
 	List<Questions>  questions;
 	public Catalogos() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public Catalogos(List<Usoscfdi> usoscfdi, List<Regimenesfiscales> regimenesfiscales, List<Questions> questions) {
 		super();

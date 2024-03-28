@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class Ticket {
 	private String 				fechaCompra;
 	private Integer 			tienda;
@@ -34,37 +35,40 @@ public class Ticket {
 	private Double				subtotal;
 	private Double				iva;
 	private Double				ieps;
+	private Fclientes 			fclientes;
 	
 	public Ticket() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	public Ticket(String fechaCompra, Integer tienda, String ticket, String caja, Double total, String region,
-			PftConexiones conexion, String tipoPago, int idturno, String tdir, String tncrvendflag, String temail,
-			String claveSAT, List<TicketDetalle> detalles, String folio, String uuid, String pdf, String xml) {
+	public Ticket(String fechaCompra, Integer tienda, String ticket, String caja, Double total, String tipoPago,
+			int idturno, PftConexiones conexion, String region, Fclientes fclientes) {
 		super();
 		this.fechaCompra = fechaCompra;
 		this.tienda = tienda;
 		this.ticket = ticket;
 		this.caja = caja;
 		this.total = total;
-		this.region = region;
+		
+		this.tipoPago = (tipoPago == null)?"00":(Integer.parseInt(tipoPago) == 0)?"00":(tipoPago.length() == 1)?"0"+tipoPago:tipoPago;
+		this.Idturno = idturno;
 		this.conexion = conexion;
-		this.tipoPago = tipoPago;
-		Idturno = idturno;
+		this.region = region;
+		this.fclientes = fclientes;
+		
+	}
+	
+	public void setTicketAdi(String claveSAT, String tdir, String tncrvendflag, String temail) {
+		this.claveSAT = claveSAT;
 		this.tdir = tdir;
 		this.tncrvendflag = tncrvendflag;
 		this.temail = temail;
-		this.claveSAT = claveSAT;
-		this.detalles = detalles;
-		this.folio = folio;
-		this.uuid = uuid;
-		this.pdf = pdf;
-		this.xml = xml;
 	}
-
+	
+	public void AgrDetalle(TicketDetalle detalle) {
+		this.detalles.add(detalle);
+	}
 
 	public String getFechaCompra() {
 		return fechaCompra;
@@ -122,22 +126,6 @@ public class Ticket {
 		return detalles;
 	}
 
-	public String getFolio() {
-		return folio;
-	}
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public String getPdf() {
-		return pdf;
-	}
-
-	public String getXml() {
-		return xml;
-	}
-
 	public void setFechaCompra(String fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
@@ -190,8 +178,24 @@ public class Ticket {
 		this.claveSAT = claveSAT;
 	}
 
-	public void setDetalles(List<TicketDetalle> detalles) {
+	public void setDetalle(List<TicketDetalle> detalles) {
 		this.detalles = detalles;
+	}
+
+	public String getFolio() {
+		return folio;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public String getPdf() {
+		return pdf;
+	}
+
+	public String getXml() {
+		return xml;
 	}
 
 	public void setFolio(String folio) {
@@ -210,44 +214,50 @@ public class Ticket {
 		this.xml = xml;
 	}
 
-
 	public Double getSubtotal() {
 		return subtotal;
 	}
-
 
 	public Double getIva() {
 		return iva;
 	}
 
-
 	public Double getIeps() {
 		return ieps;
 	}
-
 
 	public void setSubtotal(Double subtotal) {
 		this.subtotal = subtotal;
 	}
 
-
 	public void setIva(Double iva) {
 		this.iva = iva;
 	}
-
 
 	public void setIeps(Double ieps) {
 		this.ieps = ieps;
 	}
 
+	public void setDetalles(List<TicketDetalle> detalles) {
+		this.detalles = detalles;
+	}
+
+	
+	public Fclientes getFclientes() {
+		return fclientes;
+	}
+
+	public void setFclientes(Fclientes fclientes) {
+		this.fclientes = fclientes;
+	}
 
 	@Override
 	public String toString() {
-		return "Ticket [fechaCompra=" + fechaCompra + ", tienda=" + tienda + ", ticket=" + ticket + ", caja=" + caja
-				+ ", total=" + total + ", region=" + region + ", conexion=" + conexion + ", tipoPago=" + tipoPago
-				+ ", Idturno=" + Idturno + ", tdir=" + tdir + ", tncrvendflag=" + tncrvendflag + ", temail=" + temail
-				+ ", claveSAT=" + claveSAT + ", detalles=" + detalles + ", folio=" + folio + ", uuid=" + uuid + ", pdf="
-				+ pdf + ", xml=" + xml + ", subtotal=" + subtotal + ", iva=" + iva + ", ieps=" + ieps + "]";
+		return "{fechaCompra:" + fechaCompra + ", tienda:" + tienda + ", ticket:" + ticket + ", caja:" + caja
+				+ ", total:" + total + ", region:" + region + ", conexion:" + conexion + ", tipoPago:" + tipoPago
+				+ ", Idturno:" + Idturno + ", tdir:" + tdir + ", tncrvendflag:" + tncrvendflag + ", temail:" + temail
+				+ ", claveSAT:" + claveSAT + ", detalles:" + detalles + ", folio:" + folio + ", uuid:" + uuid + ", pdf:"
+				+ pdf + ", xml:" + xml + ", subtotal:" + subtotal + ", iva:" + iva + ", ieps:" + ieps + "}";
 	}
 	
 }
