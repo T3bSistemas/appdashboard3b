@@ -30,7 +30,7 @@ public class Utilidades {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("isNull- validacion Null ("+data+") :"+e.getMessage());
+			logger.error("isNull- "+e.getMessage());
 		}
 		return true;
 	}
@@ -43,7 +43,7 @@ public class Utilidades {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("getNull- validacion getNull ("+data+") :"+e.getMessage());
+			logger.error("getNull- "+e.getMessage());
 		}
 		return "";
 	}
@@ -113,7 +113,8 @@ public class Utilidades {
 			} else {
 				return "Se requiere un formato valido {fechaCompra:string, tienda:integer, ticket:string, caja:string, total:double}";
 			}
-		} catch (Exception e) {			
+		} catch (Exception e) {		
+			
 			return "Error al validar los campos de Ticket";
 		}	
 	}

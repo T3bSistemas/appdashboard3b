@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import java.util.regex.Matcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -27,10 +29,7 @@ import appdashboard3b.beans.Catalogos;
 import appdashboard3b.beans.DetalleTickets;
 import appdashboard3b.beans.ExisteFactura;
 import appdashboard3b.beans.Facturas;
-import appdashboard3b.beans.Fclientes;
 import appdashboard3b.beans.GenerarFactura;
-import appdashboard3b.beans.Peticiones;
-import appdashboard3b.beans.PftConexiones;
 import appdashboard3b.beans.Respuesta;
 import appdashboard3b.beans.Rreimpresion;
 import appdashboard3b.beans.Solicitudes;
@@ -51,6 +50,8 @@ import appdashboard3b.utelerias.Utilidades;
 @RestController
 @RequestMapping(path = "/t3b-fact-das")
 public class facturacion {
+	private static final Logger logger = LoggerFactory.getLogger(facturacion.class);
+	
 	@Autowired
 	Environment env;
 	
@@ -105,31 +106,6 @@ public class facturacion {
 		}		  
 	}
 	
-	@PostMapping("/setCliente")
-	public boolean setCliente(@RequestBody(required = true) Fclientes fclientes){	
-		return (fc.cliente(fclientes.getRfc()) != null)?fc.actualizar(fclientes):fc.insertar(fclientes);
-	}
-	
-	@PostMapping("/existeFactura")
-	public ExisteFactura existeFactura(@RequestBody(required = true) Ticket ticket){	
-		return fa.existeFactura(ticket);
-	}
-	
-	@PostMapping("/pftConexiones")
-	public PftConexiones pftConexiones(@RequestParam(required = false) String region){	
-		return pc.pftConexiones(region);
-	}
-	
-	@PostMapping("/guardarFactura")
-	public boolean guardarFactura(@RequestBody(required = true) GenerarFactura genera){	
-		return fa.guardarFactura(genera);
-	}
-	
-	@PostMapping("/guardarSolicitud")
-	public boolean guardarSolicitud(@RequestBody(required = true) List<Solicitudes> solicitudes){	
-		return so.guardarSol(solicitudes);
-	}
-	
 	@PostMapping("/reimpresion")
 	public List<Facturas> reimpresion(@RequestBody(required = true) Rreimpresion rreimpresion){	
 		return mr.reimpresion(rreimpresion);
@@ -148,22 +124,7 @@ public class facturacion {
 	@PostMapping("/agregarTicket")
 	public  ResponseEntity<?> agregarTicket(@RequestBody(required = false) Ticket ticket) {	
 		String  validarDatos = ut.validarFormatoTicket(ticket);
-		if(validarDatos.equals("")) {	
-			
-			/*try {
-				if(ticket.getFclientes() != null) {
-					Peticiones pend = mp.existePeticion(ticket);
-					if( pend == null) {
-						mp.inserta(ticket);
-					}else {
-						ticket.setFolio("S: "+pend.getId());
-						return new ResponseEntity<>(ticket, HttpStatus.OK); 
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
-			
+		if(validarDatos.equals("")) {						
 			try {				
 				String region = fa.regionTienda(ticket.getFechaCompra(), ticket.getTienda());;
 				if(region != null && !region.equals("")) {
@@ -176,25 +137,33 @@ public class facturacion {
 									RestTemplate 					restTemplate	= new RestTemplate();
 									HttpEntity<Ticket> 			    request 		= new HttpEntity<Ticket>(ticket);
 									ResponseEntity<Ticket>			response 		= restTemplate.exchange(env.getProperty("api.appticket")+"/t3b-fact-ticket/getTicket", HttpMethod.POST, request, new ParameterizedTypeReference<Ticket>(){});
+																	mp.ingresaPeticion(ticket, response.getBody());
 																	ticket		    = response.getBody();
-									return new ResponseEntity<>(ticket, HttpStatus.OK);
+								} catch (Exception e) {									
+									logger.error("agregarTicket(4)- "+e.getMessage());
+								}								
+								return new ResponseEntity<>(ticket, HttpStatus.OK);
+							} else {	
+								try {
+									if(existe.getTicket().getFolio().contains("F:")) {
+										mp.actualiza(ticket, "F");
+									}							
 								} catch (Exception e) {
-									e.printStackTrace();
+									logger.error("agregarTicket(3)- "+e.getMessage());
 								}
-							}else {	
 								return new ResponseEntity<>(existe.getTicket(), HttpStatus.OK); 
 							}
 						}else {													
 							return new ResponseEntity<>(ticket, HttpStatus.OK);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("agregarTicket(2)- "+e.getMessage());
 					}
 				}else {
 					return new ResponseEntity<>(ticket, HttpStatus.OK);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("agregarTicket(1)- "+e.getMessage());
 			}		
 		}else {
 			return new ResponseEntity<>(validarDatos, HttpStatus.BAD_REQUEST);
@@ -289,11 +258,11 @@ public class facturacion {
 							try {
 								fa.guardarFactura(genera);
 								try {
-									/*if(tickets.size() > 0) {
+									if(tickets.size() > 0) {
 										for (Ticket ticket : tickets) {
 											mp.actualiza(ticket, "F");
 										}
-									}*/								
+									}							
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

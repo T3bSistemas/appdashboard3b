@@ -6,6 +6,7 @@ import appdashboard3b.beans.Ticket;
 public interface Ipeticiones {
 	
 	public Peticiones existePeticion(Ticket ticket);
-	public boolean inserta(Ticket ticket);
+	public Long inserta(Ticket ticket, String estatus);
 	public boolean actualiza(Ticket ticket, String status);
+	public void ingresaPeticion(Ticket ticket, Ticket ticketR);
 }

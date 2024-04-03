@@ -7,6 +7,8 @@ import java.util.List;
 import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -23,6 +25,8 @@ import appdashboard3b.utelerias.RT;
 
 @Service
 public class Mreimpresion implements Ireimpresion{
+	private static final Logger logger = LoggerFactory.getLogger(Mreimpresion.class);
+	
 	@Autowired
     private JdbcTemplate jdbcT;
 	
@@ -53,7 +57,7 @@ public class Mreimpresion implements Ireimpresion{
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("reimpresion- "+e.getMessage());
 		}
 		return new ArrayList<Facturas>();
 	}
@@ -86,7 +90,7 @@ public class Mreimpresion implements Ireimpresion{
 				}				
 			}		 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("correo- "+e.getMessage());
 		}
 		return false;
 	}

@@ -1,5 +1,7 @@
 package appdashboard3b.modelos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -16,6 +18,8 @@ import appdashboard3b.interfaces.Ifclientes;
 
 @Service
 public class Mfclientes implements Ifclientes{
+	private static final Logger logger = LoggerFactory.getLogger(Mfclientes.class);
+	
 	@Autowired
     private JdbcTemplate jdbcT;
 	
@@ -28,7 +32,7 @@ public class Mfclientes implements Ifclientes{
 					   new Domicilio(rs.getString("ccalle"), rs.getString("ccolonia"), rs.getString("ccp"), rs.getString("cestado"), rs.getString("cmunicipio"), rs.getString("cnumext"), rs.getString("cnumint"), rs.getString("cpais")));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("cliente- "+e.getMessage());
 		}
 		return null;		
 	}
@@ -39,7 +43,7 @@ public class Mfclientes implements Ifclientes{
 			jdbcT.update(Cfclientes.ACTUALIZAR.toString(), fclientes.getRfc(), fclientes.getRazonSocial(), fclientes.getCorreo(), fclientes.getCorreo2(), fclientes.getDomicilio().getCalle(), fclientes.getDomicilio().getNumExt(), fclientes.getDomicilio().getNumInt(), fclientes.getDomicilio().getColonia(), fclientes.getDomicilio().getMunAlc(), fclientes.getDomicilio().getEstado(), fclientes.getDomicilio().getPais(), fclientes.getDomicilio().getCp(), false, fclientes.getUsoCFDI(), fclientes.getRegimenFiscal(), fclientes.getRfc());
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("actualizar- "+e.getMessage());
 		}
 		return false;
 	}
@@ -50,7 +54,7 @@ public class Mfclientes implements Ifclientes{
 			jdbcT.update(Cfclientes.INSRTAR.toString(), fclientes.getRfc(), fclientes.getRazonSocial(), fclientes.getCorreo(), fclientes.getCorreo2(), fclientes.getDomicilio().getCalle(), fclientes.getDomicilio().getNumExt(), fclientes.getDomicilio().getNumInt(), fclientes.getDomicilio().getColonia(), fclientes.getDomicilio().getMunAlc(), fclientes.getDomicilio().getEstado(), fclientes.getDomicilio().getPais(), fclientes.getDomicilio().getCp(), false, fclientes.getUsoCFDI(), fclientes.getRegimenFiscal());
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("insertar- "+e.getMessage());
 		}
 		return false;
 	}

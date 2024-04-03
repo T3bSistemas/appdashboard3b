@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,6 +29,7 @@ import appdashboard3b.interfaces.Ifactura;
 
 @Service
 public class Mfactura implements Ifactura{
+	private static final Logger logger = LoggerFactory.getLogger(Mfactura.class);
 	
 	@Autowired
     private JdbcTemplate jdbcT;
@@ -60,7 +63,7 @@ public class Mfactura implements Ifactura{
 									}
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("existeFactura PFT_CONEXIONES- "+e.getMessage());
 								return new ExisteFactura(-2, null);	
 							}
 						}
@@ -68,7 +71,7 @@ public class Mfactura implements Ifactura{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();					
+			logger.error("existeFactura(1)- "+e.getMessage());				
 		}
 		return new ExisteFactura(-1, null);	
 	}	
@@ -131,7 +134,7 @@ public class Mfactura implements Ifactura{
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("guardarFactura- "+e.getMessage());
 				}	
 				
 				try {
@@ -141,7 +144,7 @@ public class Mfactura implements Ifactura{
 						fc.insertar(fclientes);
 					}				
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("guardarFactura Cliente- "+e.getMessage());
 				}
 				return true;
 			}					
@@ -163,9 +166,9 @@ public class Mfactura implements Ifactura{
 				}				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("regionTienda- "+e.getMessage());
 		}
-		return "1004";
+		return "";
 	}
 
 	@Override
@@ -229,7 +232,7 @@ public class Mfactura implements Ifactura{
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("getTicketsDetalles- "+e.getMessage());
 			return new DetalleTickets(1, "Problemas de datos", null);
 		}
 		return new DetalleTickets(0, "", tickets);
@@ -245,7 +248,7 @@ public class Mfactura implements Ifactura{
 				formasdepago.put(rs.getString("fp_clave").trim(), rs.getString("clave_sat").trim());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("formasdepago- "+e.getMessage());
 		}
 		return formasdepago;
 	}
@@ -258,7 +261,7 @@ public class Mfactura implements Ifactura{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("isNull- "+e.getMessage());
 		}
 		return true;
 	}

@@ -3,6 +3,8 @@ package appdashboard3b.modelos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -19,6 +21,8 @@ import appdashboard3b.beans.Questions;
 
 @Service
 public class Mcatalogo implements Icatalogo{
+	private static final Logger logger = LoggerFactory.getLogger(Mcatalogo.class);
+	
 	@Autowired
     private JdbcTemplate jdbcT;
 	
@@ -30,7 +34,7 @@ public class Mcatalogo implements Icatalogo{
 			catalogos.setUsoscfdi(Usoscfdi());
 			catalogos.setRegimenesfiscales(Regimenesfiscales());			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Catalogos- "+e.getMessage());
 		}
 		return catalogos;
 	}
@@ -45,7 +49,7 @@ public class Mcatalogo implements Icatalogo{
 				questions.add(new Questions(rs.getInt("id"), rs.getString("question"), rs.getString("details")));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Questions- "+e.getMessage());
 		}
 		return questions;
 	}
@@ -60,7 +64,7 @@ public class Mcatalogo implements Icatalogo{
 				usosCfdi.add(new Usoscfdi(rs.getString("clave"), rs.getString("descripcion"), rs.getInt("estatus")));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Usoscfdi- "+e.getMessage());
 		}
 		return usosCfdi;
 	}
@@ -75,7 +79,7 @@ public class Mcatalogo implements Icatalogo{
 				regimenesfiscales.add(new Regimenesfiscales(rs.getInt("clave"), rs.getString("descripcion"), rs.getInt("estatus")));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Regimenesfiscales- "+e.getMessage());
 		}
 		return regimenesfiscales;
 	}
