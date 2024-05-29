@@ -40,22 +40,22 @@ public class Mfactura implements Ifactura{
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public ExisteFactura existeFactura(Ticket ticket) {
-		try {		
-			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Facturas.toString(), ticket.getRegion(), ticket.getTienda(), ticket.getTicket(), ticket.getCaja(), ticket.getFechaCompra());	
-			if(rs.next()) {	
+		try {
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Facturas.toString(), ticket.getRegion(), ticket.getTienda(), ticket.getTicket(), ticket.getCaja(), ticket.getFechaCompra());
+			if(rs.next()) {
 				ticket.setFolio("F: "+rs.getString("folio_factura")+ " "+rs.getString("serie"));
 				return new ExisteFactura(1, ticket);
 			}else {
-				rs = jdbcT.queryForRowSet(Cfactura.Solicitud.toString(), ticket.getTienda(), ticket.getCaja(), ticket.getTicket(), ticket.getFechaCompra());	
+				rs = jdbcT.queryForRowSet(Cfactura.Solicitud.toString(), ticket.getTienda(), ticket.getCaja(), ticket.getTicket(), ticket.getFechaCompra());
 				if(rs.next()) {
 					boolean tipo = rs.getString("tipo").equals("VENTA CERO");
 					ticket.setFolio((tipo)?"VS: "+rs.getString("folio_sol"):"S: "+rs.getString("folio_sol"));
 					return (tipo)?new ExisteFactura(3, ticket):new ExisteFactura(2, ticket);
 				}else {
 					if(ticket.getRegion() != null) {
-						if(!ticket.getRegion().trim().equals("")) {							
+						if(!ticket.getRegion().trim().equals("")) {
 							try {
-								rs = jdbcT.queryForRowSet(Cconexiones.PFT_CONEXIONES.toString(), ticket.getRegion());	
+								rs = jdbcT.queryForRowSet(Cconexiones.PFT_CONEXIONES.toString(), ticket.getRegion());
 								if(rs.next()) {
 									ticket.setConexion(new PftConexiones(rs.getString("tclave"), rs.getString("host"), rs.getString("puerto"), rs.getString("servicio"), rs.getString("base"), rs.getString("driver"), rs.getString("url")));
 									if(ticket.getConexion() != null) {
@@ -64,17 +64,17 @@ public class Mfactura implements Ifactura{
 								}
 							} catch (Exception e) {
 								logger.error("existeFactura PFT_CONEXIONES- "+e.getMessage());
-								return new ExisteFactura(-2, null);	
+								return new ExisteFactura(-2, null);
 							}
 						}
-					}					
+					}
 				}
 			}
 		} catch (Exception e) {
-			logger.error("existeFactura(1)- "+e.getMessage());				
+			logger.error("existeFactura(1)- "+e.getMessage());
 		}
-		return new ExisteFactura(-1, null);	
-	}	
+		return new ExisteFactura(-1, null);
+	}
 	
 	public boolean guardarFactura(GenerarFactura genera) {
 		if(genera.getTickets().size() > 0){
@@ -82,11 +82,11 @@ public class Mfactura implements Ifactura{
 			if(fclientes != null){
 				try {
 					for (Ticket ticket : genera.getTickets()) {
-						if(ticket.getFolio() != null && !ticket.getFolio().equals("")){	
+						if(ticket.getFolio() != null && !ticket.getFolio().equals("")){
 							KeyHolder facturakey = new GeneratedKeyHolder();
 							jdbcT.update(connection -> {
 								 PreparedStatement ps = connection.prepareStatement(Cfactura.IFacturas.toString(), new String[] { "id_factura" });
-								 ps.setString(1,	ticket.getFolio());					 
+								 ps.setString(1,	ticket.getFolio());
 								 ps.setString(2,  	ticket.getTicket());
 								 ps.setString(3, 	ticket.getTienda()+"");
 								 ps.setString(4, 	ticket.getRegion());
@@ -101,9 +101,9 @@ public class Mfactura implements Ifactura{
 								 ps.setDouble(13,   ticket.getSubtotal());
 								 ps.setDouble(14,   ticket.getIva());
 								 ps.setDouble(15,   (ticket.getIeps()== null)?0.0:ticket.getIeps());
-								 ps.setString(16,	ticket.getPdf());		
+								 ps.setString(16,	ticket.getPdf());
 								 return ps;
-					        },facturakey);							
+					        },facturakey);
 							Long id_factura= (long) facturakey.getKey().longValue();
 							
 							if(id_factura > 0) {
@@ -111,7 +111,7 @@ public class Mfactura implements Ifactura{
 									KeyHolder facturaDkey = new GeneratedKeyHolder();
 									jdbcT.update(connection -> {
 										 PreparedStatement ps = connection.prepareStatement(Cfactura.IFacturasD.toString(), new String[] { "id_fac_det" });
-										 ps.setString(1,	ticket.getFolio());		
+										 ps.setString(1,	ticket.getFolio());
 										 ps.setString(2, 	ticket.getTncrvendflag());
 										 ps.setString(3, 	ticket.getTienda()+"");
 										 ps.setString(4, 	ticket.getRegion());
@@ -125,30 +125,30 @@ public class Mfactura implements Ifactura{
 										 ps.setDouble(12,   detalle.getIvaPrc());
 										 ps.setDouble(13,   detalle.getIvaMont());
 										 return ps;
-							        },facturaDkey);	
+							        },facturaDkey);
 									
 									Long id_fac_det= (long) facturaDkey.getKey().longValue();
 									jdbcT.update(Cfactura.IFacturasT.toString() ,id_factura, id_fac_det, detalle.getIdesc());
-								}					
-							}					   			
+								}
+							}
 						}
 					}
 				} catch (Exception e) {
 					logger.error("guardarFactura- "+e.getMessage());
-				}	
+				}
 				
 				try {
 					if(fc.cliente(fclientes.getRfc()) != null){
 						fc.actualizar(fclientes);
 					}else {
 						fc.insertar(fclientes);
-					}				
+					}
 				} catch (Exception e) {
 					logger.error("guardarFactura Cliente- "+e.getMessage());
 				}
 				return true;
-			}					
-		}			
+			}
+		}
 		return false;
 	}
 
@@ -156,14 +156,14 @@ public class Mfactura implements Ifactura{
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public String regionTienda(String fecha, Integer tienda) {
 		try {
-			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Region.toString(),fecha, tienda);	
-			if(rs.next()) {	
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.Region.toString(),fecha, tienda);
+			if(rs.next()) {
 				return rs.getString("talmacen");
 			}else {
-				SqlRowSet rs2 = jdbcT.queryForRowSet(Cfactura.RegionAnt.toString(), tienda);	
-				if(rs2.next()) {	
+				SqlRowSet rs2 = jdbcT.queryForRowSet(Cfactura.RegionAnt.toString(), tienda);
+				if(rs2.next()) {
 					return rs2.getString("talmacen");
-				}				
+				}
 			}
 		} catch (Exception e) {
 			logger.error("regionTienda- "+e.getMessage());
@@ -192,28 +192,28 @@ public class Mfactura implements Ifactura{
 								   temail       =  (temail!=null)?temail.trim():temail;
 							if(!isNull(tdir) && !isNull(tncrvendflag)) {
 								ticket.setTicketAdi(claveSAT, tdir, tncrvendflag, temail);
-								List<TicketDetalle> Listdetalle = new ArrayList<TicketDetalle>();;
+								List<TicketDetalle> Listdetalle = new ArrayList<TicketDetalle>();
 								if(ticket.getDetalles().size() > 0) {
 									for (TicketDetalle detalle : ticket.getDetalles()) {
-										if( detalle.getAtmacant() > 0 && detalle.getAtmventa()> 0d) {	
+										if( detalle.getAtmacant() > 0 && detalle.getAtmventa()> 0d) {
 											SqlRowSet rs2 = jdbcT.queryForRowSet(Cfactura.IvaiEps.toString(), detalle.getIclave());
 											if(rs2.next()) {
 												String CClaveUnidad 	= rs2.getString("c_ClaveUnidad");
-													   CClaveUnidad     = (CClaveUnidad!=null)?CClaveUnidad.trim():CClaveUnidad;	
+													   CClaveUnidad     = (CClaveUnidad!=null)?CClaveUnidad.trim():CClaveUnidad;
 												String CClaveProdServ	= rs2.getString("c_ClaveProdServ");
 													   CClaveProdServ     = (CClaveProdServ!=null)?CClaveProdServ.trim():CClaveProdServ;
 												if(detalle.getAtmdesc() != null && detalle.getAtmdesc().equals("PS")) {
-														continue;														
+														continue;
 												}else {
 													Listdetalle.add(new TicketDetalle(detalle.getIclave(), detalle.getAtmacant(), detalle.getAtmventa(), detalle.getIvClave(), detalle.getIeClave(), rs2.getString("idesc"), rs2.getString("iunidad"), CClaveUnidad.equals("") ?"H87":CClaveUnidad , CClaveProdServ.equals("") ?"01010101":CClaveProdServ, rs2.getString("iv_factor"), rs2.getString("ie_factor"), detalle.getAtmventa()*rs2.getDouble("iv_factor"), detalle.getAtmventa()*rs2.getDouble("ie_factor"), detalle.getAtmdesc(), detalle.getGclave(), detalle.getLclave()));
-												}														
+												}
 											}
 										}
 									}
 								}
 								
 								if(Listdetalle != null && Listdetalle.size() > 0) {
-									ticket.setDetalle(Listdetalle);										
+									ticket.setDetalle(Listdetalle);
 								}else {
 									return new DetalleTickets(5, "Problemas de datos, Detalle de ticket IVA IEPS", null);
 								}
@@ -225,7 +225,7 @@ public class Mfactura implements Ifactura{
 						}
 					}else {
 						return new DetalleTickets(3, "Problemas de datos, detalle ticket formasdepago no existe", null);
-					}					 				
+					}
 				}
 			}else {
 				return new DetalleTickets(2, "Problemas de datos, detalle ticket formasdepago", null);
@@ -253,6 +253,30 @@ public class Mfactura implements Ifactura{
 		return formasdepago;
 	}
 	
+	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public List<String> erroresPac(String xml, String codigoError) {
+		List<String> erroresPAC = new ArrayList<String>();
+		try {
+			codigoError = (xml != null && !xml.equals(""))? (codigoError != null && !codigoError.equals(""))?codigoError:"":"0";
+			SqlRowSet rs = jdbcT.queryForRowSet(Cfactura.CodErrPAC.toString(), codigoError);
+			if(rs.next()) {
+				erroresPAC.add(0, rs.getString("error_cli"));
+				erroresPAC.add(1, rs.getString("status_sol"));
+				erroresPAC.add(2, rs.getString("tipo"));
+			}
+		} catch (Exception e) {
+			logger.error("errorePAC- "+e.getMessage());
+		}finally {
+			if(erroresPAC.size() == 0) {
+				erroresPAC.add(0, codigoError+"-"+xml);
+				erroresPAC.add(1, "3");
+				erroresPAC.add(2, "INDETERMINADA");
+			}
+		}
+		return erroresPAC;
+	}
+	
 	public boolean isNull(String data) {
 		try {
 			if(data != null) {
@@ -265,5 +289,4 @@ public class Mfactura implements Ifactura{
 		}
 		return true;
 	}
-
 }

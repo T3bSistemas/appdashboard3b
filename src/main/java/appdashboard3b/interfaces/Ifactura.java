@@ -11,7 +11,8 @@ import appdashboard3b.beans.Ticket;
 public interface Ifactura {
 	public ExisteFactura existeFactura(Ticket ticket);
 	public boolean guardarFactura(GenerarFactura genera);
-	public String regionTienda(String fecha, Integer tienda);	
+	public String regionTienda(String fecha, Integer tienda);
 	public DetalleTickets getTicketsDetalles(List<Ticket> tickets);
 	public Map<String, String> formasdepago();
+	public List<String> erroresPac(String xml, String codigoError);
 }

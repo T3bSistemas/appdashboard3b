@@ -35,6 +35,7 @@ public class Ticket {
 	private Double				subtotal;
 	private Double				iva;
 	private Double				ieps;
+	private String 				CodigoError;
 	private Fclientes 			fclientes;
 	
 	public Ticket() {
@@ -241,8 +242,15 @@ public class Ticket {
 	public void setDetalles(List<TicketDetalle> detalles) {
 		this.detalles = detalles;
 	}
-
 	
+	public String getCodigoError() {
+		return CodigoError;
+	}
+
+	public void setCodigoError(String codigoError) {
+		CodigoError = codigoError;
+	}
+
 	public Fclientes getFclientes() {
 		return fclientes;
 	}

@@ -13,7 +13,8 @@ public enum Cfactura {
 	RegionAnt,
 	FormasdePago,
 	Serie,
-	IvaiEps;
+	IvaiEps,
+	CodErrPAC;
 	
 	public String toString() {
 		switch(this) {
@@ -28,11 +29,11 @@ public enum Cfactura {
 			case ISolicitud:
 				return "INSERT INTO solicitudes (fecha_sol, status_sol, rfc, tclave, fecha_compra, num_caja, num_ticket, descripcion, num_factura, folio_sol, tipo, sucursal) VALUES (Getdate(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturas:
-				return "INSERT INTO facturas (folio_factura, num_ticket, num_tienda, num_region, caja, fecha_compra, fecha_factura, uuid, xml, serie, rfc, correo, total, subtotal, iva, ieps, pdfBase64) VALUES (?, ?, ?, ?, ?, ?, CONVERT(date,GETDATE()), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "; 
+				return "INSERT INTO facturas (folio_factura, num_ticket, num_tienda, num_region, caja, fecha_compra, fecha_factura, uuid, xml, serie, rfc, correo, total, subtotal, iva, ieps, pdfBase64) VALUES (?, ?, ?, ?, ?, ?, CONVERT(date,GETDATE()), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturasD:
 				return "INSERT INTO factura_detalle (folio_factura, serie, num_tienda, num_region, cve_producto, cve_prod_sat, valor_unit, cantidad, subtotal, ieps_prc, ieps_monto, iva_prc, iva_monto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 			case IFacturasT:
-				return "INSERT INTO factura_ticket (factura_id, fac_det_id, idesc) VALUES (?, ?, ?); "; 
+				return "INSERT INTO factura_ticket (factura_id, fac_det_id, idesc) VALUES (?, ?, ?); ";
 			case Region:
 				return "select talmacen from ftiendas_por_almacen_det where fecha = ? and tclave = ?";
 			case RegionAnt:
@@ -43,8 +44,10 @@ public enum Cfactura {
 				return "SELECT t.tdir, t.tncrvendflag, t.temail FROM ftiendas t WHERE t.tclave = ? ";
 			case IvaiEps:
 				return "SELECT iclave,idesc,iunidad,iventa,c_ClaveUnidad,c_ClaveProdServ,iv_factor,ie_factor FROM farticulos where iclave = ?";
+			case CodErrPAC:
+				return "select error_pac, error_cli, tipo, status_sol from errores_pac where codigo_error = ?";
 			default:
-				return "";	
+				return "";
 		}
 	}
 }
